@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ContactService {
-  private apiUrl = 'http://localhost:5000'; // Point to your Express.js backend
+  private apiUrl = 'https://ish-page.onrender.com'; // Point to your Express.js backend
 
   constructor(private http: HttpClient) {}
 
