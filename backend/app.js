@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: 'https://your-frontend-url.com',  // Change this to your frontend URL
+  origin: 'https://singh-1shmeet.web.app',  // Change this to your frontend URL
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
