@@ -1,7 +1,7 @@
 require("dotenv").config(); // Load environment variables
 const express = require("express");
 const bodyParser = require("body-parser");
-const oracledb = require("oracledb");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
@@ -11,27 +11,29 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Oracle DB Configuration
-const dbConfig = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  connectString: process.env.DB_CONNECTION_STRING,
-};
+// MongoDB Connection String from .env
+const dbURI = process.env.MONGODB_URI;
+
+// MongoDB Connection
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Connection Failed:", err));
+
+// Define Contact Schema and Model
+const contactSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  subject: String,
+  message: String,
+});
+
+const ContactMessage = mongoose.model("ContactMessage", contactSchema);
 
 // API to Check Database Connection
-app.get("/db-status", async (req, res) => {
-  let connection;
-  try {
-    connection = await oracledb.getConnection(dbConfig);
-    res.status(200).json({ message: "✅ Database Connected Successfully!" });
-  } catch (error) {
-    console.error("❌ Database Connection Failed:", error);  // Log detailed error message
-    res.status(500).json({ message: `❌ Failed to Connect: ${error.stack || error.message}` });
-  } finally {
-    if (connection) {
-      await connection.close();
-    }
-  }
+app.get("/db-status", (req, res) => {
+  mongoose.connection.readyState === 1
+    ? res.status(200).json({ message: "✅ Database Connected Successfully!" })
+    : res.status(500).json({ message: "❌ Database Connection Failed!" });
 });
 
 // API to Insert Contact Message
@@ -43,28 +45,18 @@ app.post("/contact", async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  let connection;
   try {
-    // Get connection to the Oracle DB
-    connection = await oracledb.getConnection(dbConfig);
+    // Create a new ContactMessage instance
+    const newMessage = new ContactMessage({ name, email, subject, message });
 
-    // Insert the contact message into the database
-    const query = `
-      INSERT INTO CONTACT_MESSAGES (NAME, EMAIL, SUBJECT, MESSAGE)
-      VALUES (:name, :email, :subject, :message)
-    `;
-    
-    await connection.execute(query, { name, email, subject, message }, { autoCommit: true });
+    // Save to the database
+    await newMessage.save();
 
     // Respond with success message
     res.status(201).json({ message: "✅ Message Sent Successfully!" });
   } catch (error) {
-    console.error("❌ Error Inserting Message:", error);  // Log detailed error message
-    res.status(500).json({ error: `❌ Failed to insert message into database. ${error.stack || error.message}` });
-  } finally {
-    if (connection) {
-      await connection.close();
-    }
+    console.error("❌ Error Inserting Message:", error);
+    res.status(500).json({ error: "❌ Failed to insert message into database." });
   }
 });
 
