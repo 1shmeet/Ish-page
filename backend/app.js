@@ -1,42 +1,33 @@
-require("dotenv").config(); // Load environment variables
+require("dotenv").config(); // Ensure you're loading the .env file
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const cors = require("cors");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB Connection String from .env
-const dbURI = process.env.MONGODB_URI;
+// MongoDB URI from the environment variable
+const uri = process.env.MONGO_URI;
 
-// MongoDB Connection
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Failed:", err));
+let db;
 
-// Define Contact Schema and Model
-const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  subject: String,
-  message: String,
-});
+// Connect to MongoDB
+const connectToDb = async () => {
+  try {
+    const client = await MongoClient.connect(uri); // Removed deprecated options
+    db = client.db("your_database_name"); // Specify your DB name
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Failed to connect to MongoDB", error);
+  }
+};
 
-const ContactMessage = mongoose.model("ContactMessage", contactSchema);
+// Make sure MongoDB is connected before handling requests
+connectToDb();
 
-// API to Check Database Connection
-app.get("/db-status", (req, res) => {
-  mongoose.connection.readyState === 1
-    ? res.status(200).json({ message: "✅ Database Connected Successfully!" })
-    : res.status(500).json({ message: "❌ Database Connection Failed!" });
-});
-
-// API to Insert Contact Message
+// Route to handle contact form submissions
 app.post("/contact", async (req, res) => {
   const { name, email, subject, message } = req.body;
 
@@ -46,21 +37,18 @@ app.post("/contact", async (req, res) => {
   }
 
   try {
-    // Create a new ContactMessage instance
-    const newMessage = new ContactMessage({ name, email, subject, message });
+    // Insert the contact message into the MongoDB collection
+    const collection = db.collection("contact_messages"); // Specify the collection name
+    await collection.insertOne({ name, email, subject, message });
 
-    // Save to the database
-    await newMessage.save();
-
-    // Respond with success message
     res.status(201).json({ message: "✅ Message Sent Successfully!" });
   } catch (error) {
-    console.error("❌ Error Inserting Message:", error);
-    res.status(500).json({ error: "❌ Failed to insert message into database." });
+    console.error("Error inserting message:", error);
+    res.status(500).json({ error: "Failed to insert message into database." });
   }
 });
 
-// Start Server
+// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
