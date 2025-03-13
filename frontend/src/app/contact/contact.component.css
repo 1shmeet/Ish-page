@@ -1,0 +1,176 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding-top: 70px; /* Prevent navbar from overlapping content */
+    background-color: #ffffff;
+}
+
+/* Navbar Styling */
+nav {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Keep it above other content */
+    background-color: #222;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff !important;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff !important;
+}
+
+/* Section Styling */
+#contact {
+    width: 100%;
+    padding: 50px 20px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: #333;
+    text-align: left;
+}
+
+/* Contact Text */
+.contact-text {
+    font-size: 18px;
+    color: #555;
+    text-align: left;
+}
+
+/* Flexbox Layout */
+.contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Contact Info Box */
+.contact-info {
+    flex: 1;
+    min-width: 350px;
+    max-width: 500px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info h4 {
+    color: #333;
+}
+
+.contact-info p {
+    font-size: 18px;
+    color: #555;
+}
+
+.contact-info a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Contact Form */
+.contact-form-container {
+    flex: 1;
+    min-width: 350px;
+    max-width: 500px;
+}
+
+.db-status {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.db-status.success {
+    color: green;
+}
+
+.db-status.error {
+    color: red;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Validation Error */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Submit Button */
+.submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%; /* Makes button full-width */
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-info, .contact-form-container {
+        width: 100%;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .navbar-toggler {
+        border-color: white;
+    }
+}
+/* Fix Navbar Overlapping Content */
+body {
+    padding-top: 80px; /* Adjust based on navbar height */
+}
+
+/* Ensure Contact Section is Below Navbar */
+#contact {
+    margin-top: 20px; /* Adjust as needed */
+}

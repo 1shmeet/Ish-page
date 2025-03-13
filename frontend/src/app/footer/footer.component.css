@@ -1,0 +1,34 @@
+.footer {
+    background-color: #000000; /* Dark Grey Background */
+    color: white;
+    padding: 30px 0;
+}
+
+.footer h5 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #f8f9fa;
+}
+
+.footer p, .footer a {
+    font-size: 14px;
+    color: #d6d6d6;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    background-color: #23272b; /* Slightly darker grey */
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 14px;
+    color: #b0b0b0;
+}

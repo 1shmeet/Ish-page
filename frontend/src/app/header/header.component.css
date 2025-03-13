@@ -1,0 +1,17 @@
+.gradient-bg {
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* Gradient for text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+/* Fix Navbar Overlapping Content */
+body {
+  padding-top: 80px; /* Adjust based on navbar height */
+}
+
+/* Ensure Contact Section is Below Navbar */
+#contact {
+  margin-top: 20px; /* Adjust as needed */
+}
