@@ -8,11 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-  origin: 'https://singh-1shmeet.web.app',  // Change this to your frontend URL
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-}));
+app.use(cors());
 app.use(bodyParser.json());
 
 // Oracle DB Configuration
@@ -29,8 +25,8 @@ app.get("/db-status", async (req, res) => {
     connection = await oracledb.getConnection(dbConfig);
     res.status(200).json({ message: "✅ Database Connected Successfully!" });
   } catch (error) {
-    console.error("❌ Database Connection Failed:", error);
-    res.status(500).json({ message: `❌ Failed to Connect: ${error.message}` });
+    console.error("❌ Database Connection Failed:", error);  // Log detailed error message
+    res.status(500).json({ message: `❌ Failed to Connect: ${error.stack || error.message}` });
   } finally {
     if (connection) {
       await connection.close();
@@ -63,8 +59,8 @@ app.post("/contact", async (req, res) => {
     // Respond with success message
     res.status(201).json({ message: "✅ Message Sent Successfully!" });
   } catch (error) {
-    console.error("❌ Error Inserting Message:", error);
-    res.status(500).json({ error: "❌ Failed to insert message into database." });
+    console.error("❌ Error Inserting Message:", error);  // Log detailed error message
+    res.status(500).json({ error: `❌ Failed to insert message into database. ${error.stack || error.message}` });
   } finally {
     if (connection) {
       await connection.close();
